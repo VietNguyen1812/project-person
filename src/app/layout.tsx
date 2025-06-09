@@ -1,6 +1,9 @@
+"use client";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+import { Container } from "react-bootstrap";
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -9,9 +12,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <header>Header Hỏi dân IT </header>
-        {children}
-        <footer>Fotter</footer>
+        <Header />
+        <Container>{children}</Container>
+        <Footer />
       </body>
     </html>
   );
