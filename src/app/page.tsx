@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import AppTable from "@/components/table";
-import x from "./styles/app.module.css";
-import y from "./styles/test.module.css";
+import x from "../styles/app.module.css";
+import y from "../styles/test.module.css";
 import useSWR from "swr";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
       revalidateOnReconnect: false,
     }
   );
-  if (!data) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
   return (
