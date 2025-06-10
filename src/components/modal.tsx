@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
-// import { toast } from "react-toastify"; // Keep only the toast import
+import { toast } from "react-toastify"; // Keep only the toast import
 
 interface IProps {
   showModalCreate: boolean;
@@ -18,7 +18,33 @@ const ModalComponent = (props: IProps) => {
 
   const handleSumbit = () => {
     // toast.success("Create succeeded!...");
-    console.log(title, author, content);
+    if (!title) {
+      toast.error("Title is required!");
+      return;
+    }
+    if (!author) {
+      toast.error("Author is required!");
+      return;
+    }
+    if (!content) {
+      toast.error("Content is required!");
+      return;
+    }
+    fetch("http://localhost:8000/blogs", {
+      method: "POST",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title, author, content }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res) {
+          toast.success("Create succeeded!...");
+          handleClose();
+        }
+      });
   };
 
   const handleClose = () => {
