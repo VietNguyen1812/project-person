@@ -1,23 +1,40 @@
 "use client";
+"use client";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify"; // Keep only the toast import
 import { mutate } from "swr";
 
 interface IProps {
-  showModalCreate: boolean;
-  setShowModalCreate: (value: boolean) => void;
+  showModalUpdate: boolean;
+  setShowModalUpdate: (value: boolean) => void;
+  blog: IBlog | null;
+  setBlog: (value: IBlog | null) => void;
 }
-
-const ModalComponent = (props: IProps) => {
-  const { showModalCreate, setShowModalCreate } = props;
+const UpdateModal = (props: IProps) => {
+  const { showModalUpdate, setShowModalUpdate, blog, setBlog } = props;
+  const [id, setId] = useState<number>(0);
   const [title, setTitle] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
+  useEffect(() => {
+    if (blog && blog.id) {
+      // Populate fields with blog data when blog changes
+      setId(blog.id);
+      setTitle(blog.title);
+      setAuthor(blog.author);
+      setContent(blog.content);
+    }
+  }, [blog]);
+
   const handleSumbit = () => {
+    /**
+     * Handles the submit action for updating a blog.
+     * Validates input fields and sends a PUT request to update the blog.
+     */
     // toast.success("Create succeeded!...");
     if (!title) {
       toast.error("Title is required!");
@@ -31,8 +48,9 @@ const ModalComponent = (props: IProps) => {
       toast.error("Content is required!");
       return;
     }
-    fetch("http://localhost:8000/blogs", {
-      method: "POST",
+    fetch(`http://localhost:8000/blogs/${id}`, {
+      // Send PUT request to update the blog
+      method: "PUT",
       headers: {
         Accept: "application/json, text/plain, */*",
         "Content-Type": "application/json",
@@ -42,7 +60,7 @@ const ModalComponent = (props: IProps) => {
       .then((res) => res.json())
       .then((res) => {
         if (res) {
-          toast.success("Create succeeded!...");
+          toast.warning("Update blog succeeded!...");
           handleClose();
           mutate("http://localhost:8000/blogs");
         }
@@ -50,15 +68,19 @@ const ModalComponent = (props: IProps) => {
   };
 
   const handleClose = () => {
+    /**
+     * Closes the modal and resets input fields.
+     */
     setTitle("");
     setAuthor("");
     setContent("");
-    setShowModalCreate(false);
+    setBlog(null); // Reset the blog state
+    setShowModalUpdate(false);
   };
 
   return (
     <Modal
-      show={showModalCreate}
+      show={showModalUpdate}
       onHide={() => handleClose()}
       backdrop="static"
       keyboard={false}
@@ -66,6 +88,7 @@ const ModalComponent = (props: IProps) => {
     >
       <Modal.Header closeButton>
         <Modal.Title>Add New A Blog</Modal.Title>
+        <Modal.Title>Update Blog</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -110,4 +133,4 @@ const ModalComponent = (props: IProps) => {
   );
 };
 
-export default ModalComponent;
+export default UpdateModal;

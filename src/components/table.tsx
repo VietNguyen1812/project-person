@@ -3,13 +3,16 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import ModalComponent from "./modal";
 import { useState } from "react";
+import UpdateModal from "./updateModal";
 
 interface IProps {
   blogs: IBlog[];
 }
 const AppTable = (props: IProps) => {
   const { blogs } = props;
+  const [blog, setBlog] = useState<IBlog | null>(null);
   const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
+  const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
   console.log("Blogs:", blogs);
   return (
     <>
@@ -32,17 +35,21 @@ const AppTable = (props: IProps) => {
           </tr>
         </thead>
         <tbody>
-          {blogs?.map((blog) => {
+          {blogs?.map((element) => {
             return (
-              <tr key={blog.id}>
-                <td>{blog.id}</td>
-                <td>{blog.title}</td>
-                <td>{blog.author}</td>
+              <tr key={element.id}>
+                <td>{element.id}</td>
+                <td>{element.title}</td>
+                <td>{element.author}</td>
                 <td>
                   <Button>View</Button>
                   <Button
                     variant="warning"
                     className="mx-3" //margin left 3 đơn vị
+                    onClick={() => {
+                      setBlog(element);
+                      setShowModalUpdate(true);
+                    }}
                   >
                     Edit
                   </Button>
@@ -56,6 +63,12 @@ const AppTable = (props: IProps) => {
       <ModalComponent
         showModalCreate={showModalCreate}
         setShowModalCreate={setShowModalCreate}
+      />
+      <UpdateModal
+        showModalUpdate={showModalUpdate}
+        setShowModalUpdate={setShowModalUpdate}
+        blog={blog}
+        setBlog={setBlog}
       />
     </>
   );
