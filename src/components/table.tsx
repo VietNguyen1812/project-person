@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import ModalComponent from "./modal";
 import { useState } from "react";
 import UpdateModal from "./updateModal";
+import Link from "next/link";
 
 interface IProps {
   blogs: IBlog[];
@@ -42,7 +43,13 @@ const AppTable = (props: IProps) => {
                 <td>{element.title}</td>
                 <td>{element.author}</td>
                 <td>
-                  <Button>View</Button>
+                  <Link
+                    className="btn btn-primary"
+                    href={`/blogs/${element.id}`}
+                  >
+                    View
+                  </Link>
+
                   <Button
                     variant="warning"
                     className="mx-3" //margin left 3 đơn vị
