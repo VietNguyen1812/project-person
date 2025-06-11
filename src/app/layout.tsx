@@ -16,7 +16,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        <Container>{children}</Container>
+        <Container style={{ minHeight: "calc(100vh - 106px)" }}>
+          {children}
+        </Container>
         <Footer />
         <ToastContainer />
       </body>
