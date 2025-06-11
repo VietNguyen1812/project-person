@@ -5,6 +5,7 @@ import ModalComponent from "./modal";
 import { useState } from "react";
 import UpdateModal from "./updateModal";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 interface IProps {
   blogs: IBlog[];
@@ -14,6 +15,21 @@ const AppTable = (props: IProps) => {
   const [blog, setBlog] = useState<IBlog | null>(null);
   const [showModalCreate, setShowModalCreate] = useState<boolean>(false);
   const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
+  const handleDetele = (id: number) => {
+    if (confirm(`Are you sure you want to delete this blog = ${id}?`)) {
+      fetch(`http://localhost:8000/blogs/${id}`, {
+        method: "DELETE",
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res) {
+            toast.success("Delete succeeded!...");
+            // Refresh the data
+            window.location.reload();
+          }
+        });
+    }
+  };
   console.log("Blogs:", blogs);
   return (
     <>
@@ -60,7 +76,12 @@ const AppTable = (props: IProps) => {
                   >
                     Edit
                   </Button>
-                  <Button variant="danger">Delete</Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDetele(element.id)}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             );
